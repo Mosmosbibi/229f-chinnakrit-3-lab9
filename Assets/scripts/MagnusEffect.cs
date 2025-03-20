@@ -1,37 +1,35 @@
 using UnityEngine;
 
 public class MagnusEffect : MonoBehaviour
-
 {
-
-    public Vector3 velocity; // ความเร็วของลูกบอล
-
-    public Vector3 spin; // การหมุนของลูกบอล
-
-    public float magnusCoefficient = 0.1f; // ค่าคงที่ของ Magnus Effect
-
     private Rigidbody rb;
-
+    [SerializeField] private Vector3 velocity, spin;
     void Start()
-
     {
-
         rb = GetComponent<Rigidbody>();
-
-        rb.velocity = velocity; // กำหนดความเร็วเริ่มต้น
-
     }
 
+    // Update is called once per frame
     void FixedUpdate()
-
     {
-
-        // คำนวณแรง Magnus Effect
-
-        Vector3 magnusForce = magnusCoefficient * Vector3.Cross(spin, rb.velocity);
-
-        rb.AddForce(magnusForce, ForceMode.Force);
-
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            //kick
+            Kick();
+        }
+        ApplyMagnusEffect();
     }
 
-} 
+    void Kick()
+    {
+        rb.linearVelocity = velocity;
+        rb.angularVelocity = spin;
+    }
+
+    void ApplyMagnusEffect()
+    {
+        Vector3 magnusForce = Vector3.Cross(rb.linearVelocity, rb.angularVelocity);
+        
+        rb.AddForce(magnusForce);
+    }
+}
